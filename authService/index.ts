@@ -1,15 +1,14 @@
 import fastify from 'fastify';
 
+import { login } from './login/login.controller';
+import { register } from './register/register.controller';
+
 const server = fastify();
 
-server.get('/ping', async (request, reply) => {
-  console.log(request);
-  reply.send({
-    success: true,
-  });
-});
+server.route(register);
+server.route(login);
 
-server.listen({ port: 8080 }, (err, adress) => {
+server.listen({ port: 8080 }, async (err, adress) => {
   if (err) {
     console.error(err);
     process.exit(1);
