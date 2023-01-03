@@ -4,7 +4,7 @@
   "description": "Auth service for project",
   "main": "index.js",
   "scripts": {
-    "build": "tsc -p tsconfig.json",
+    "build": "rm -rf build/ & tsc -p tsconfig.json",
     "start": "nodemon index.ts",
     "format": "prettier --write \"./**/*.ts\"",
     "test": "echo \"Error: no test specified\" && exit 1"
