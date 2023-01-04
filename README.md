@@ -13,6 +13,36 @@ B --> D{Mongo}
 C --> G{Postgres}
 ```
 
+---
+
+**_Auth Service_**:
+| Unit | Technology |
+|--|--|
+| Core | Fastify |
+| DB | Mongo |
+| ORM | Mongoose |
+| Language | TypeScript |
+
+---
+
+**_Payment Service_**
+| Unit | Technology |
+|--|--|
+| Core | Pure Node.js |
+| DB | Postgres |
+| ORM | Pure SQL |
+| Language | TypeScript |
+
+---
+
+**_User Service_**
+--- In progress ---
+
+---
+
+**_P.S_**
+This is only a prototype, and I have no idea what I'm doing, so it will be **updated!**
+
 # P.S
 
 This is only a prototype, and I have no idea what I'm doing, so it will be **updated!**
