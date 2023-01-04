@@ -2,17 +2,24 @@ import { FastifyReply, FastifyRequest } from 'fastify';
 
 import { routeOpts } from './routeOptions';
 import { RegisterDto } from './types';
-import { saveUser } from './register.service';
 import { preHandler } from './hooks/preHandler';
+import { registrationHandler } from './register.service';
+import { HttpError } from '../errors/HttpError';
 
 const register = {
   ...routeOpts,
   preHandler,
-  handler: async function ({ body }: FastifyRequest, reply: FastifyReply) {
+  handler: async function (request: FastifyRequest, reply: FastifyReply) {
     try {
-      const savedUser = await saveUser(body as RegisterDto);
-      reply.code(201).send(savedUser ? 'User is created' : 'error');
+      const { body } = request;
+
+      const savedUser = await registrationHandler(body as RegisterDto);
+
+      reply.code(201).send({ result: savedUser ? 'User is created' : 'error' });
     } catch (error) {
+      if (error instanceof HttpError)
+        reply.code(error.statusCode).send({ error: error.message });
+
       console.error(error);
     }
   },

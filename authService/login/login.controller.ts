@@ -1,30 +1,26 @@
 import { FastifyReply, FastifyRequest } from 'fastify';
+import { HttpError } from '../errors/HttpError';
+import { loginHandler } from './login.service';
 
-import { compare } from '../hashing';
-import { findUser } from './login.service';
 import { routeOpts } from './routeOptions';
 import { LoginDto } from './types';
 
 const login = {
   ...routeOpts,
-  handler: async function ({ body }: FastifyRequest, reply: FastifyReply) {
+  handler: async function (request: FastifyRequest, reply: FastifyReply) {
     try {
-      const { password, phoneNumber } = body as LoginDto;
-      const user = await findUser(phoneNumber);
+      const { body } = request;
 
-      if (!user) {
-        return reply.code(404).send({ result: 'User not found' });
-      }
+      const userFromDb = await loginHandler(body as LoginDto);
 
-      const passwordDidMatch = compare(password, user.password!);
-
-      if (!passwordDidMatch) {
-        return reply.code(403).send({ result: 'Password is incorrect' });
-      }
-
-      return reply.code(200).send({ result: 'Sucessfully logged in' });
+      return reply
+        .code(200)
+        .send({ result: `${userFromDb.firstName} Logged in` });
     } catch (error) {
-      console.error(error);
+      if (error instanceof HttpError) {
+        reply.code(error.statusCode).send({ error: error.message });
+      }
+      console.log(error);
     }
   },
 };
