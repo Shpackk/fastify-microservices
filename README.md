@@ -43,6 +43,3 @@ C --> G{Postgres}
 **_P.S_**
 This is only a prototype, and I have no idea what I'm doing, so it will be **updated!**
 
-# P.S
-
-This is only a prototype, and I have no idea what I'm doing, so it will be **updated!**
