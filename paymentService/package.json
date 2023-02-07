@@ -6,16 +6,20 @@
   "scripts": {
     "build": "rm -rf build/ & tsc -p tsconfig.json",
     "dev": "nodemon index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create:mig": "ts-node database/migrations/generateMigration",
+    "mig:all": "ts-node database/migrations/runAllMigrations.ts"
   },
   "author": "Shpackk",
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.11.18",
+    "@types/pg": "^8.6.6",
     "nodemon": "^2.0.20",
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "pg": "^8.9.0",
     "ts-node": "^10.9.1"
   }
 }
