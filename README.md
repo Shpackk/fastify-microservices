@@ -2,17 +2,7 @@
 
 This project is a serious playground, aka 'learning by doing' but trying to do better. Here i'm trying to get closer to **Microservices**, **Databases proffecient level**, **DevOps**.
 This project is a set of 3 microservices, in the end result should be something alike:
-
-```mermaid
-graph LR
-A[API Gateway] --> B((Auth S.))
-A --> C((Payment S.))
-A --> F((User S.))
-F --> E{Mongo}
-B --> D{Mongo}
-C --> G{Postgres}
-```
-
+<img width="1490" alt="Screenshot 2023-02-08 at 14 59 11" src="https://user-images.githubusercontent.com/76433892/217536372-b499c355-838f-459a-9c2c-532f688d5a07.png">
 ---
 
 **_Auth Service_**:
