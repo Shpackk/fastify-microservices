@@ -18,9 +18,9 @@ This project is a set of 3 microservices, in the end result should be something 
 **_Payment Service_**
 | Unit | Technology |
 |--|--|
-| Core | Pure Node.js |
+| Core | Node.js |
 | DB | Postgres |
-| ORM | Pure SQL |
+| ORM | SQL |
 | Language | TypeScript |
 
 ---
