@@ -7,8 +7,9 @@
     "build": "rm -rf build/ & tsc -p tsconfig.json",
     "dev": "nodemon index.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "create:mig": "ts-node database/migrations/generateMigration",
-    "mig:all": "ts-node database/migrations/runAllMigrations.ts"
+    "create:mig": "ts-node database/migrations/Generate",
+    "mig:all:up": "ts-node database/migrations/Migrate flag=up",
+    "mig:all:down": "ts-node database/migrations/Migrate flag=down"
   },
   "author": "Shpackk",
   "license": "ISC",
@@ -19,6 +20,7 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
+    "dotenv": "^16.0.3",
     "pg": "^8.9.0",
     "ts-node": "^10.9.1"
   }
