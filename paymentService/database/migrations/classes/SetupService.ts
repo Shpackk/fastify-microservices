@@ -6,7 +6,7 @@ export class SetupService {
   createMigrationTable() {
     this.client.query(
       `CREATE TABLE IF NOT EXISTS MigrationsLog (
-      migratioName varchar,
+      migrationName varchar,
       created_at varchar
     );`,
       (err) => {

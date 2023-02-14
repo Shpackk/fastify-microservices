@@ -3,10 +3,7 @@ import * as dotenv from 'dotenv';
 
 dotenv.config();
 
-const client = new Client({
-  password: process.env.PGPASSWORD,
-  user: process.env.PGUSER,
-});
+const client = new Client();
 
 client.connect((err) => {
   if (err) console.error('Error while connecting to PostgresQL', err.stack);
@@ -21,15 +18,21 @@ client.connect((err) => {
 //   },
 // );
 
-client.query(
-  `INSERT INTO CardInfo (userId, cardNumber, cardBalance) VALUES (1,54494393994, 400)`,
-  (err, res) => {
-    if (err) console.error(err);
-    else console.info(res);
-  },
-);
+client.query('BEGIN;');
+client.query('SET track_io_timing = TRUE;');
 
-client.query(`SELECT * from CardInfo`, (err, res) => {
+const query = `EXPLAIN (ANALYZE,BUFFERS) INSERT INTO CardInfo (userId, cardNumber, cardBalance) VALUES ($1, $2, $3);`;
+const values = [3, Math.round(Math.random() * 100), 400];
+
+client.query(query, values, (err, res) => {
   if (err) console.error(err);
-  else console.info(res.rows);
+  else console.info(res);
+
+  client.query('ROLLBACK;', () => {
+    client.query(`SELECT * from CardInfo`, (err, res) => {
+      if (err) console.error(err);
+      else console.info(res.rows);
+      client.end();
+    });
+  });
 });

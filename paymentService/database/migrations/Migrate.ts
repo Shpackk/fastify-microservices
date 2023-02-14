@@ -19,17 +19,24 @@ const setup = new SetupService(client);
 
 const migrate = async () => {
   try {
-    const migFiles = await prepare
-      .findMigrationsInCurrentDir()
-      .importMigFiles();
-
     setup.createMigrationTable();
+
+    const migFiles = prepare.findMigrationsInCurrentDir();
+
+    const notTrackedMigrations = await migrationService.checkSyncWithDB(
+      migFiles.fileNames,
+    );
+
+    await migFiles.importMigFiles(notTrackedMigrations!);
 
     const sanitizedQueries = migFiles.sanitizeMigrations();
 
     await migrationService.migrate(sanitizedQueries);
 
+    await migrationService.trackNewMigrations(notTrackedMigrations!);
+
     ClientForMigration.closeConnection();
+    process.exit(1);
   } catch (error) {
     console.error(error);
   }

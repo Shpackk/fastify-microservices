@@ -20,12 +20,11 @@ export class PrepareMigrations {
     return this;
   }
 
-  async importMigFiles() {
-    for (const fileName of this.fileNames) {
+  async importMigFiles(notTrackedMigrations: string[]) {
+    for (const fileName of notTrackedMigrations) {
       let { default: migration } = await import('../' + fileName);
       this.migrations.push(migration);
     }
-    return this;
   }
 
   sanitizeMigrations() {

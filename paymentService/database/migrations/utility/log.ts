@@ -1,9 +1,9 @@
 const logSucces = (migration: string) => {
   console.group();
   console.info(`
-   \x1b[0;36m MIGRATION \x1b[0m \n
+   \x1b[0;36m COMPLETED \x1b[0m \n
    ${migration} \n
-   \x1b[0;36m IS APPLIED \x1b[0m
+   \x1b[0;36m SUCCESSFULLY \x1b[0m
   `);
   console.groupEnd();
 };

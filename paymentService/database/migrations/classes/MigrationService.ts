@@ -18,6 +18,7 @@ export class MigrationService {
     for (const migration of migrations) {
       await this.runMigrationWithClient(migration);
     }
+    return this;
   }
 
   private async runMigrationWithClient(migration: Migration) {
@@ -29,20 +30,48 @@ export class MigrationService {
     }
   }
 
-  // private async updateMigrationLogTable(names: string[]) {
-  //   try {
-  //     await this.client
-  //       .query(`INSERT INTO migrationsLog `);
-  //   } catch (error) {
-  //     logError('Updating migrationLog table error', error);
-  //   }
-  // }
+  async checkSyncWithDB(pendingMigrations: string[]) {
+    try {
+      const { rows } = await this.client.query(
+        `SELECT CONCAT(created_at, '_', migrationname) as migration FROM migrationsLog`,
+      );
+
+      const outOfSyncMigrations = pendingMigrations.filter((migration, idx) =>
+        this.flag === 'up'
+          ? migration !== rows[idx]?.migration
+          : migration === rows[idx]?.migration,
+      );
+
+      if (outOfSyncMigrations.length > 0) {
+        return outOfSyncMigrations;
+      }
+
+      logSucces('DB is up to date. Migrations are not applied.');
+      process.exit(1);
+    } catch (error) {
+      logError('Updating migrationLog table error', error);
+    }
+  }
+
+  async trackNewMigrations(outOfSyncMigrations: string[]) {
+    try {
+      if (this.flag === 'up') {
+        await this.client.query(
+          `INSERT INTO migrationsLog (migrationName, created_at) VALUES ${this.spreadForBulkInsert(
+            outOfSyncMigrations,
+          )};`,
+        );
+      } else await this.client.query(`DROP TABLE IF EXISTS migrationsLog;`);
+    } catch (error) {
+      logError('Couldnt update the migration table', error);
+    }
+  }
+  private spreadForBulkInsert(migrations: string[]) {
+    return migrations
+      .map((migration) => {
+        const data = migration.split('_');
+        return `('${data[1]}', '${data[0]}')`;
+      })
+      .join(',');
+  }
 }
-// TODO - support work with migrations log table to store
-// info about migrations that are applied to the system
-// SELECT * FROM
-//   unnest(
-//     ARRAY[1, 2, 3, 4],
-//     ARRAY['Shawn', 'Bible', 'Build', 'Jeff'],
-//     ARRAY[23, 24, 28, 27]
-//   ) AS data(id,name,age);
